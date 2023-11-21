@@ -44,7 +44,7 @@ Note: Anonymous access will be allowed per default
 
 For Android install [Grafana View](https://play.google.com/store/apps/details?id=it.ksol.grafanaview), add a new profile by a given name and the Ingress address to check the carbon emmission quickly.
 
-<img src="grafanamobil.png" alt="grafanamobil" width="82" height="183"/>
+<img src="grafanamobil.png" alt="grafanamobil" width="240" height="520"/>
 
 ### Config parameters:
 
