@@ -1,0 +1,22 @@
+name: Build Chart
+
+on: 
+  push:
+    branches:
+    - main
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Helm lint & package & push
+        run: |
+          helm registry login ${GHR} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+          helm dependency build
+          helm lint .
+          helm package .
+          helm push $(ls *.tgz| head -1) oci://${GHR}/${{ github.repository_owner }}/charts
+        env:
+          GHR: ghcr.io

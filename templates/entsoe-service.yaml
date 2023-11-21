@@ -1,0 +1,17 @@
+{{ if .Values.entsoe.enabled }}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: entsoe-carbon-footprint
+  labels:
+    app.kubernetes.io/component: entsoe
+    {{- include "carbon-footprint.labels" . | nindent 4 }}-entso
+spec:
+  selector:
+    {{- include "carbon-footprint.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: 9091
+{{ end }}

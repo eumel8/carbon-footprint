@@ -1,0 +1,86 @@
+{{ if .Values.entsoe.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    {{- include "carbon-footprint.labels" . | nindent 4 }}
+  name: entsoe-{{ include "carbon-footprint.fullname" . }}
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      {{- include "carbon-footprint.selectorLabels" . | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        {{- include "carbon-footprint.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - image: "{{ .Values.entsoe.image.repository }}:{{ .Values.entsoe.image.tag }}"
+        imagePullPolicy: {{ .Values.entsoe.image.pullPolicy }}
+        name: entsoe
+        ports:
+          - containerPort: 9091
+        env:
+        - name: entsoe_api_key
+          valueFrom:
+            secretKeyRef:
+              name: entsoe-{{ include "carbon-footprint.fullname" . }}
+              key: entsoe_api_key
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: entsoe_end
+          value: "{{ .Values.entsoe.end }}"
+        - name: entsoe_start
+          value: "{{ .Values.entsoe.start }}"
+        {{- if .Values.entsoe.proxy.enabled }}
+        - name: https_proxy
+          value: "{{ .Values.entsoe.proxy.protocol }}://{{ .Values.entsoe.proxy.host }}:{{ .Values.entsoe.proxy.port }}"
+        {{- end }}
+        resources:
+          {{- toYaml .Values.entsoe.resources | nindent 12 }}
+        securityContext:
+          {{- toYaml .Values.entsoe.securityContext | nindent 12 }}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        {{- toYaml .Values.entsoe.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 3
+      volumes:
+      - name: tmp
+        emptyDir:
+          medium: Memory
+{{ if .Values.entsoe.proxy.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: entsoe-{{ include "carbon-footprint.fullname" . }}
+spec:
+  egress:
+  - ports:
+    - port: {{ .Values.entsoe.proxy.port }}
+      protocol: TCP
+    to:
+    - ipBlock:
+        cidr: {{ .Values.entsoe.proxy.host }}/32
+  podSelector:
+    matchLabels:
+      {{- include "carbon-footprint.selectorLabels" . | nindent 6 }}
+  policyTypes:
+  - Egress
+{{ end }}
+{{ end }}
