@@ -495,7 +495,7 @@
           "useBackend": false
         }
       ],
-      "title": "Energy Generation Germany",
+      "title": "Energy Generation Germany in MW",
       "type": "piechart"
     },
     {
