@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Helm lint & package & push
         run: |
-          helm repo add promezheus https://prometheus-community.github.io/helm-charts
+          helm repo add prometheus https://prometheus-community.github.io/helm-charts
           helm repo add grafana https://grafana.github.io/helm-charts
           helm registry login ${GHR} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
           helm dependency build
