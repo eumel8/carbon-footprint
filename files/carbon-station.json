@@ -30,8 +30,7 @@
   "panels": [
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${datasource}"
+        "type": "prometheus"
       },
       "description": "Using data from https://transparency.entsoe.eu/",
       "fieldConfig": {
