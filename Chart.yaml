@@ -1,8 +1,8 @@
 apiVersion: v2
 name: carbon-footprint
 description: A minimal Helm chart for carbon footprint measurement
-version: "0.0.3"
-appVersion: "0.0.3"
+version: "0.0.4"
+appVersion: "0.0.4"
 keywords:
   - monitoring
 dependencies:
