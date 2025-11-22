@@ -1,16 +1,16 @@
 apiVersion: v2
 name: carbon-footprint
 description: A minimal Helm chart for carbon footprint measurement
-version: "0.0.4"
-appVersion: "0.0.4"
+version: "1.0.0"
+appVersion: "1.0.0"
 keywords:
   - monitoring
 dependencies:
   - name: prometheus
-    version: "25.6.0"
+    version: "27.46.0"
     repository: "https://prometheus-community.github.io/helm-charts"
   - name: grafana
-    version: "7.0.8"
+    version: "10.2.0"
     repository: "https://grafana.github.io/helm-charts"
 sources:
   - https://github.com/eumel8/carbon-footprint
